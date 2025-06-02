@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:22:20 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/04/21 13:22:21 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/02 16:03:11 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	if (!get_memory(s, c, tab))
 		return (NULL);
-	tab[mot] = 0;
+	tab[mot] = NULL;
 	return (tab);
 }
 

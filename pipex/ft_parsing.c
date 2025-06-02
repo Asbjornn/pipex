@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:36:19 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/05/30 09:39:25 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/02 16:15:34 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,3 +17,63 @@
 // 	cmd1 = ft_split(argv[2], ' ');
 // 	cmd2 = ft_split(argv[3], ' ');
 // }
+
+char	*ft_get_path(char *envp[])
+{
+	size_t	i;
+	char	*path;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp("PATH=", envp[i], 5))
+		{
+			ft_printf("path find :%s", envp[i]);
+			path = ft_strdup(envp[i]);
+			break ;
+		}
+		i++;
+	}
+	return (path);
+}
+
+char	*ft_find_absolute_path(char *path, char **cmd)
+{
+	char	*abso_path;
+	char	**path_split;
+	char	*command;
+	size_t	i;
+
+	i = 0;
+	path_split = ft_split(path, ':');
+	while (path_split[i])
+	{
+		command = ft_strjoin(path_split[0], "/");
+		command = ft_strjoin(command, cmd[0]);
+		if ((access(command, X_OK)) == 0)
+		{
+			abso_path = ft_strdup(command);
+			free(command);
+			break ;
+		}
+		i++;
+		free(command);
+	}
+	free_tab(path_split);
+	return (abso_path);
+}
+
+/*
+PATH=
+
+cmd = 	ls 
+		-l
+path =/home/gcauchy/bin/ls
+
+char *all_cmd;
+
+all_cmd = ft_strjoin(path, '/');
+all_cmd = ft_strjoin(all_cmd, cmd[0]);
+
+/home/gcauchy/bin:/home/gcauchy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+*/

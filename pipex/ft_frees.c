@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_process.c                                       :+:      :+:    :+:   */
+/*   ft_frees.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/30 09:32:13 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/02 16:21:40 by gcauchy          ###   ########.fr       */
+/*   Created: 2025/06/02 12:04:41 by gcauchy           #+#    #+#             */
+/*   Updated: 2025/06/02 15:36:52 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_pipex.h"
 
-void	ft_child_process(int f1, char **cmd1, char *path, int *end)
+void	free_tab(char **tab)
 {
-	dup2(end[1], STDOUT_FILENO);
-	dup2(f1, STDIN_FILENO);
-	close(end[0]);
-	close(f1);
-	execve(path, cmd1, NULL);
-}
+	size_t	i;
 
-void	ft_parent_process(int f2, char **cmd2, char *path, int *end)
-{
-	(void)path;
-	// wait(1);
-	dup2(end[0], STDIN_FILENO);
-	dup2(f2, STDOUT_FILENO);
-	close(end[1]);
-	ft_printf("%s", end[0]);
-	execve(path, cmd2, NULL);
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 }
-
-// PAS EXECVE DANS UN PARENTS

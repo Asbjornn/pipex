@@ -6,23 +6,27 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:56:30 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/01 12:25:40 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/02 16:21:29 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_pipex.h"
 
-void	pipex(int f1, int f2, char **cmd1, char **cmd2, char **env)
+void	pipex(int f1, int f2, char **argv, char *path)
 {
 	pid_t	pid;
 	int		end[2];
+	char	**cmd1;
+	char	**cmd2;
 
+	cmd1 = ft_split(argv[2], ' ');
+	cmd2 = ft_split(argv[3], ' ');
 	pipe(end);
 	pid = fork();
 	if (pid == 0)
-		ft_child_process(f1, cmd1, env, end);
+		ft_child_process(f1, cmd1, path, end);
 	else
-		ft_parent_process(f2, cmd2, env, end);
+		ft_parent_process(f2, cmd2, path, end);
 }
 
 static int	ft_check_args(int argc)
@@ -37,27 +41,16 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	int		f1;
 	int		f2;
-	char	**env;
-	char	**cmd1;
-	char	**cmd2;
+	char	*path;
 
-	for (int i = 0; envp[i]; i++)
-	{
-		ft_printf("envp n.%d %s\n", i, envp[i]);
-	}
-	
-	env = NULL;
-	f1 = open(argv[1], O_RDONLY);
-	f2 = open(argv[4], O_RDWR);
 	if (!ft_check_args(argc))
 		return (ft_printf("error input"), 0);
-	// env = ft_split(envp, ':');
-	cmd1 = ft_split(argv[2], ' ');
-    cmd2 = ft_split(argv[3], ' ');
-	pipex(f1, f2, cmd1, cmd2, env);
+	path = ft_get_path(envp);
+	f1 = open(argv[1], O_RDONLY);
+	f2 = open(argv[argc - 1], O_RDWR);
+	pipex(f1, f2, argv, path);
 	return (0);
 }
-
 
 /*
 ==================== FONCTIONNEMENT DUP =================
@@ -97,4 +90,40 @@ else
 	ft_printf("Le pid parent :%d\n", pid);
 }
 return (0);
+*/
+
+/*
+==================== FONCTIONNEMENT PIPE =================
+creer un lien entre les deux end,
+tout ce qui est donne a l'un, l'autre le recois aussi
+on l'utilise pour rediriger les STDIN et STDOUT pour write et read en meme temps
+et rediriger l'info pendant un fork
+definir un tableau de int 'end[2]'
+end[0] sera le read
+end[1] sera le write
+
+int end[2];
+
+pipe(end);
+...
+*/
+
+/*
+
+==================== FONCTIONNEMENT EXECVE =================
+permet d'executer une fonction dans une fonction
+doit avoir :
+un *char avec le path absolue de la commande a executer
+un **char avec les arguments de la commande finie par NULL
+un **char pour l'environnement finie pas NULL aussi
+*/
+
+/*
+==================== FONCTIONNEMENT ACCESS =================
+permet de verifier si on a acces a un path avec differement mode
+R_OK = read ok
+W_OK = write ok
+X_OK = execute pl
+renvoi -1 en cas d'erreur
+renvoi 0 si c'est bon	
 */

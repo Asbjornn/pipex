@@ -11,12 +11,12 @@ DIR_O		= file_o
 LIBFT_A		= ${LIBFT_DIR}/libft.a
 PRINFT_A	= ${PRINTF_DIR}/libftprintf.a
 
-SRCS    	=	pipex.c ft_parsing.c ft_process.c
+SRCS    	= pipex.c ft_parsing.c ft_process.c ft_frees.c
+
+OBJ			= $(patsubst %.c,file_o/%.o,$(SRCS))
 
 BLUE=\033[0;94m
 GREEN=\033[1;92m
-
-OBJ    = $(patsubst %.c,file_o/%.o,$(SRCS))
 
 all: ${NAME}
 
