@@ -1,43 +1,44 @@
 CC		= gcc
 CFLAGS 	= -Wall -Wextra -Werror -g
 
-NAME	= pipex
-INCS    = includes
+NAME		= pipex
 
-SRCS    = $(wildcard printf/*.c) $(wildcard *.c)
-DIR_O	= file_o
+INCS_DIR    = includes
+LIBFT_DIR	= libft
+PRINTF_DIR	= libft/printf
+DIR_O		= file_o
 
-SRC_BONUS =	
+LIBFT_A		= ${LIBFT_DIR}/libft.a
+PRINFT_A	= ${PRINTF_DIR}/libftprintf.a
+
+SRCS    	=	pipex.c ft_parsing.c ft_process.c
 
 BLUE=\033[0;94m
 GREEN=\033[1;92m
 
 OBJ    = $(patsubst %.c,file_o/%.o,$(SRCS))
-OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
 all: ${NAME}
 
 $(DIR_O):
 	@mkdir -p $(DIR_O)
-	@mkdir -p $(DIR_O)/printf
 
 file_o/%.o: %.c | $(DIR_O)
-	@${CC} ${CFLAGS} -I ${INCS} -c $< -o $@
+	@${CC} ${CFLAGS} -I ${INCS_DIR} -c $< -o $@
 
 ${NAME}: ${OBJ}
-	@${CC} ${CFLAGS} ${OBJ} -o ${NAME}
+	@${MAKE} -C ${LIBFT_DIR}
+	@${CC} ${CFLAGS} ${OBJ} ${LIBFT_A} ${PRINFT_A} -o ${NAME}
 	@echo -e "${GREEN}COMPILATION SUCEED"
-
-
-bonus: ${OBJ} ${OBJ_BONUS}
-	@${CC} ${CFLAGS} ${OBJ} ${OBJ_BONUS} -o ${NAME}
 
 clean:
 	@rm -rf $(DIR_O)
+	@${MAKE} -C ${LIBFT_DIR} clean
 	@echo -e "${GREEN}ALL IS CLEAN"
 
 fclean: clean
 	@rm -f ${NAME}
+	@${MAKE} -C ${LIBFT_DIR} fclean
 
 re: fclean all
 
