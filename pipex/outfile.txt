@@ -1,1 +1,28 @@
-bonjour
+INCS_DIR    = includes
+LIBFT_DIR	= libft
+PRINTF_DIR	= libft/printf
+DIR_O		= file_o
+LIBFT_A		= ${LIBFT_DIR}/libft.a
+PRINFT_A	= ${PRINTF_DIR}/libftprintf.a
+$(DIR_O):
+	@mkdir -p $(DIR_O)
+file_o/%.o: %.c | $(DIR_O)
+	@${CC} ${CFLAGS} -I ${INCS_DIR} -c $< -o $@
+	@${MAKE} -C ${LIBFT_DIR}
+	@rm -rf $(DIR_O)
+	@${MAKE} -C ${LIBFT_DIR} clean
+	@${MAKE} -C ${LIBFT_DIR} fclean
+INCS_DIR    = includes
+LIBFT_DIR	= libft
+PRINTF_DIR	= libft/printf
+DIR_O		= file_o
+LIBFT_A		= ${LIBFT_DIR}/libft.a
+PRINFT_A	= ${PRINTF_DIR}/libftprintf.a
+$(DIR_O):
+	@mkdir -p $(DIR_O)
+file_o/%.o: %.c | $(DIR_O)
+	@${CC} ${CFLAGS} -I ${INCS_DIR} -c $< -o $@
+	@${MAKE} -C ${LIBFT_DIR}
+	@rm -rf $(DIR_O)
+	@${MAKE} -C ${LIBFT_DIR} clean
+	@${MAKE} -C ${LIBFT_DIR} fclean

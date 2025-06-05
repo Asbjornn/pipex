@@ -6,15 +6,16 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:56:30 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/02 16:21:29 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/05 09:44:11 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_pipex.h"
 
-void	pipex(int f1, int f2, char **argv, char *path)
+static void	pipex(int f1, int f2, char **argv, char *path)
 {
 	pid_t	pid;
+	pid_t	second_pid;
 	int		end[2];
 	char	**cmd1;
 	char	**cmd2;
@@ -24,17 +25,28 @@ void	pipex(int f1, int f2, char **argv, char *path)
 	pipe(end);
 	pid = fork();
 	if (pid == 0)
-		ft_child_process(f1, cmd1, path, end);
+		first_child_process(f1, cmd1, path, end);
 	else
-		ft_parent_process(f2, cmd2, path, end);
+	{
+		wait(NULL);
+		second_pid = fork();
+		if(second_pid == 0)
+			second_child_process(f2, cmd2, path, end);
+		else
+		{
+			close(f1);	
+			close(f2);
+		}
+	}
+	cleanup(cmd1, cmd2);
 }
 
 static int	ft_check_args(int argc)
 {
 	if (argc > 5)
-		return (-1);
-	else
 		return (0);
+	else
+		return (1);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -49,12 +61,13 @@ int	main(int argc, char *argv[], char *envp[])
 	f1 = open(argv[1], O_RDONLY);
 	f2 = open(argv[argc - 1], O_RDWR);
 	pipex(f1, f2, argv, path);
+	free(path);
 	return (0);
 }
 
 /*
 ==================== FONCTIONNEMENT DUP =================
-dup2 redirige le stdout dans un autre
+dup2 redirige le stdout, stdin et stderr dans un autre
 ici le stdout sera le fd et non la sortie "classique" du terminal
 
 les fd par defaults sont 
@@ -116,6 +129,7 @@ doit avoir :
 un *char avec le path absolue de la commande a executer
 un **char avec les arguments de la commande finie par NULL
 un **char pour l'environnement finie pas NULL aussi
+l'utilisation de cette commande annule les commandes qui vont suivre
 */
 
 /*
@@ -123,7 +137,7 @@ un **char pour l'environnement finie pas NULL aussi
 permet de verifier si on a acces a un path avec differement mode
 R_OK = read ok
 W_OK = write ok
-X_OK = execute pl
+X_OK = execute ok
 renvoi -1 en cas d'erreur
 renvoi 0 si c'est bon	
 */

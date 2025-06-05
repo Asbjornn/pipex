@@ -6,17 +6,11 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:36:19 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/02 16:15:34 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/05 09:37:44 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_pipex.h"
-
-// void	ft_parse_args(char *argv[], char ***cmd1, char ***cmd2)
-// {
-// 	cmd1 = ft_split(argv[2], ' ');
-// 	cmd2 = ft_split(argv[3], ' ');
-// }
 
 char	*ft_get_path(char *envp[])
 {
@@ -24,11 +18,11 @@ char	*ft_get_path(char *envp[])
 	char	*path;
 
 	i = 0;
+	path = NULL;
 	while (envp[i])
 	{
 		if (!ft_strncmp("PATH=", envp[i], 5))
 		{
-			ft_printf("path find :%s", envp[i]);
 			path = ft_strdup(envp[i]);
 			break ;
 		}
@@ -39,16 +33,19 @@ char	*ft_get_path(char *envp[])
 
 char	*ft_find_absolute_path(char *path, char **cmd)
 {
+	char	*command;
 	char	*abso_path;
 	char	**path_split;
-	char	*command;
 	size_t	i;
 
 	i = 0;
+	abso_path = NULL;
+	if (!ft_strncmp(path, "PATH=", 5))
+		path += 5;
 	path_split = ft_split(path, ':');
 	while (path_split[i])
 	{
-		command = ft_strjoin(path_split[0], "/");
+		command = ft_strjoin(path_split[i], "/");
 		command = ft_strjoin(command, cmd[0]);
 		if ((access(command, X_OK)) == 0)
 		{
