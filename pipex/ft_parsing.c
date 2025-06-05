@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:36:19 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/05 09:37:44 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/05 15:37:04 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,20 @@ char	*ft_find_absolute_path(char *path, char **cmd)
 	char	*command;
 	char	*abso_path;
 	char	**path_split;
+	char	*tmp;
 	size_t	i;
 
 	i = 0;
 	abso_path = NULL;
+	tmp = NULL;
 	if (!ft_strncmp(path, "PATH=", 5))
 		path += 5;
 	path_split = ft_split(path, ':');
 	while (path_split[i])
 	{
-		command = ft_strjoin(path_split[i], "/");
-		command = ft_strjoin(command, cmd[0]);
+		tmp = ft_strjoin(path_split[i], "/");
+		command = ft_strjoin(tmp, cmd[0]);
+		free(tmp);
 		if ((access(command, X_OK)) == 0)
 		{
 			abso_path = ft_strdup(command);
@@ -71,6 +74,4 @@ char *all_cmd;
 
 all_cmd = ft_strjoin(path, '/');
 all_cmd = ft_strjoin(all_cmd, cmd[0]);
-
-/home/gcauchy/bin:/home/gcauchy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 */

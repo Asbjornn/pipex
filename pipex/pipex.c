@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:56:30 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/05 09:44:11 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/05 16:21:35 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void	pipex(int f1, int f2, char **argv, char *path)
 {
-	pid_t	pid;
-	pid_t	second_pid;
+	pid_t	pid1;
+	pid_t	pid2;
 	int		end[2];
 	char	**cmd1;
 	char	**cmd2;
@@ -23,30 +23,41 @@ static void	pipex(int f1, int f2, char **argv, char *path)
 	cmd1 = ft_split(argv[2], ' ');
 	cmd2 = ft_split(argv[3], ' ');
 	pipe(end);
-	pid = fork();
-	if (pid == 0)
-		first_child_process(f1, cmd1, path, end);
-	else
+	pid1 = fork();
+	if (pid1 == 0)
 	{
-		wait(NULL);
-		second_pid = fork();
-		if(second_pid == 0)
-			second_child_process(f2, cmd2, path, end);
-		else
-		{
-			close(f1);	
-			close(f2);
-		}
+		close(f2);
+		first_child_process(f1, cmd1, path, end);
 	}
+	pid2 = fork();
+	if (pid2 == 0)
+	{
+		close(f1);
+		second_child_process(f2, cmd2, path, end);
+	}
+	close(end[0]);
+	close(end[1]);
+	close(f1);
+	close(f2);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
 	cleanup(cmd1, cmd2);
 }
 
-static int	ft_check_args(int argc)
+static int	ft_check_args(int argc, char *argv[])
 {
-	if (argc > 5)
+	int	i;
+
+	i = 0;
+	if (argc != 5)
 		return (0);
-	else
-		return (1);
+	while (argv[i])
+	{
+		if (argv[i] == NULL)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -55,11 +66,13 @@ int	main(int argc, char *argv[], char *envp[])
 	int		f2;
 	char	*path;
 
-	if (!ft_check_args(argc))
+	if (!ft_check_args(argc, argv))
 		return (ft_printf("error input"), 0);
 	path = ft_get_path(envp);
 	f1 = open(argv[1], O_RDONLY);
-	f2 = open(argv[argc - 1], O_RDWR);
+	f2 = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (f1 < 0 || f2 < 0)
+		return (-1);
 	pipex(f1, f2, argv, path);
 	free(path);
 	return (0);
