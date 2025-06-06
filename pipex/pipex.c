@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:56:30 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/05 16:21:35 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/05 18:08:27 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ static void	pipex(int f1, int f2, char **argv, char *path)
 	pid1 = fork();
 	if (pid1 == 0)
 	{
+		close(end[0]);
 		close(f2);
 		first_child_process(f1, cmd1, path, end);
 	}
 	pid2 = fork();
 	if (pid2 == 0)
 	{
+		close(end[1]);
 		close(f1);
 		second_child_process(f2, cmd2, path, end);
 	}
