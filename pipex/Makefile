@@ -11,7 +11,7 @@ DIR_O		= file_o
 LIBFT_A		= ${LIBFT_DIR}/libft.a
 PRINFT_A	= ${PRINTF_DIR}/libftprintf.a
 
-SRCS    	= pipex.c ft_parsing.c ft_process.c ft_frees.c
+SRCS    	= pipex.c ft_path.c ft_utils_pipex.c
 
 OBJ			= $(patsubst %.c,file_o/%.o,$(SRCS))
 

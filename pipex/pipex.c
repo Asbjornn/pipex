@@ -6,77 +6,68 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:56:30 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/05 18:08:27 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/06 14:26:25 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_pipex.h"
 
-static void	pipex(int f1, int f2, char **argv, char *path)
+/* ======================================================================== */
+/*								FREE FUNCTION								*/
+/* ======================================================================== */
+
+void	free_tab(char **tab)
+{
+	size_t	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+/* ======================================================================== */
+/*								PIPEX FUNCTION								*/
+/* ======================================================================== */
+
+static void	pipex(char **argv, char *envp[])
 {
 	pid_t	pid1;
 	pid_t	pid2;
 	int		end[2];
-	char	**cmd1;
-	char	**cmd2;
+	int		status;
 
-	cmd1 = ft_split(argv[2], ' ');
-	cmd2 = ft_split(argv[3], ' ');
 	pipe(end);
 	pid1 = fork();
+	if (pid1 == -1)
+		exit (-1);
 	if (pid1 == 0)
-	{
-		close(end[0]);
-		close(f2);
-		first_child_process(f1, cmd1, path, end);
-	}
+		first_child_process(argv, end, envp);
 	pid2 = fork();
+	if (pid2 == -1)
+		exit (-1);
 	if (pid2 == 0)
-	{
-		close(end[1]);
-		close(f1);
-		second_child_process(f2, cmd2, path, end);
-	}
+		second_child_process(argv, end, envp);
 	close(end[0]);
 	close(end[1]);
-	close(f1);
-	close(f2);
 	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
-	cleanup(cmd1, cmd2);
+	waitpid(pid2, &status, 0);
+	if (WIFEXITED(status))
+		exit(WEXITSTATUS(status));
 }
 
-static int	ft_check_args(int argc, char *argv[])
-{
-	int	i;
-
-	i = 0;
-	if (argc != 5)
-		return (0);
-	while (argv[i])
-	{
-		if (argv[i] == NULL)
-			return (0);
-		i++;
-	}
-	return (1);
-}
+/* ======================================================================== */
+/*									MAIN									*/
+/* ======================================================================== */
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	int		f1;
-	int		f2;
-	char	*path;
-
-	if (!ft_check_args(argc, argv))
-		return (ft_printf("error input"), 0);
-	path = ft_get_path(envp);
-	f1 = open(argv[1], O_RDONLY);
-	f2 = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (f1 < 0 || f2 < 0)
-		return (-1);
-	pipex(f1, f2, argv, path);
-	free(path);
+	if (argc != 5)
+		return (ft_printf("format: ./pipex infile cmd1 cmd2 outfile\n"), 0);
+	pipex(argv, envp);
 	return (0);
 }
 
@@ -141,6 +132,7 @@ pipe(end);
 ==================== FONCTIONNEMENT EXECVE =================
 permet d'executer une fonction dans une fonction
 doit avoir :
+
 un *char avec le path absolue de la commande a executer
 un **char avec les arguments de la commande finie par NULL
 un **char pour l'environnement finie pas NULL aussi
@@ -153,6 +145,7 @@ permet de verifier si on a acces a un path avec differement mode
 R_OK = read ok
 W_OK = write ok
 X_OK = execute ok
+
 renvoi -1 en cas d'erreur
 renvoi 0 si c'est bon	
 */
