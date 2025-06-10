@@ -16,7 +16,7 @@
 # include <stdarg.h>
 # include <unistd.h>
 
-size_t	ft_strlen(const char *s);
+size_t	ft_strlen_printf(const char *s);
 int		ft_print_address(void *ptr);
 int		ft_print_char(char c);
 int		ft_print_hexa(int i, char c);

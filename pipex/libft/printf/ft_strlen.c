@@ -6,13 +6,13 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:43:44 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/04/23 13:48:28 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:02:43 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen_printf(const char *s)
 {
 	size_t	i;
 

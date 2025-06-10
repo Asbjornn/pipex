@@ -1,0 +1,6 @@
+JE$
+SUIS$
+LE$
+INFILE$
+$
+5

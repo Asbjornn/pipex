@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:08:19 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/05/30 16:57:25 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:08:17 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,18 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
+size_t	ft_strlen_gnl(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i += 1;
+	return (i);
+}
+
 char	*ft_strjoin_gnl(char *s1, const char *s2)
 {
 	int		i[2];
@@ -44,7 +56,7 @@ char	*ft_strjoin_gnl(char *s1, const char *s2)
 			return (NULL);
 		s1[0] = '\0';
 	}
-	result = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	result = (char *)malloc(ft_strlen_gnl(s1) + ft_strlen_gnl(s2) + 1);
 	if (!result)
 	{
 		free(s1);
@@ -61,19 +73,7 @@ char	*ft_strjoin_gnl(char *s1, const char *s2)
 	return (result);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i += 1;
-	return (i);
-}
-
-char	*ft_strdup(const char *s)
+char	*ft_strdup_gnl(const char *s)
 {
 	char	*dup;
 	int		i;

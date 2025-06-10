@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:56:30 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/09 20:18:00 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/10 15:30:35 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,13 @@ static void	pipex(char **argv, char *envp[])
 
 int	main(int argc, char *argv[], char *envp[])
 {
+	char	*format;
+
+	format = "./pipex 'infile' 'cmd1' 'cmd2' 'outfile'\n";
 	if (argc != 5)
-		return (ft_printf("format: ./pipex infile cmd1 cmd2 outfile\n"), 0);
-	pipex(argv, envp);
+		ft_printf("format: %s\n", format);
+	else
+		pipex(argv, envp);
 	return (0);
 }
 

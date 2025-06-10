@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:07:25 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/05/30 16:57:36 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:07:38 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static char	*new_stash(char *stash)
 	temp = ft_strchr(stash, '\n');
 	new = NULL;
 	if (temp && *(temp + 1))
-		new = ft_strdup(temp + 1);
+		new = ft_strdup_gnl(temp + 1);
 	free(stash);
 	stash = new;
 	return (new);

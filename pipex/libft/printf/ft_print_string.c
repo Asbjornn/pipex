@@ -21,7 +21,7 @@ int	ft_print_string(char *str)
 		write(1, "(null)", 6);
 		return (6);
 	}
-	i = ft_strlen(str);
+	i = ft_strlen_printf(str);
 	write(1, str, i);
 	return (i);
 }
