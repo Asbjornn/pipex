@@ -11,7 +11,7 @@ DIR_O		= file_o
 LIBFT_A		= ${LIBFT_DIR}/libft.a
 PRINFT_A	= ${PRINTF_DIR}/libftprintf.a
 
-SRCS    	= pipex.c ft_utils_pipex.c
+SRCS    	= ft_pipex.c ft_path.c ft_fork.c
 
 SRCS_BONUS	= bonus/pipex_bonus.c bonus/pipex_utils_bonus.c
 

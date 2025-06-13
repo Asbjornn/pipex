@@ -6,7 +6,7 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 12:37:17 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/10 15:25:17 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/13 17:44:05 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,12 @@ static void	child_here_doc(int end[2], char *limiter)
 {
 	char	*line;
 
+	limiter[ft_strlen(limiter)] = '\0';
 	line = get_next_line(0);
 	while (line != NULL)
 	{
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
+			&& ft_strncmp(line, limiter, ft_strlen(line) - 1) == 0)
 		{
 			free(line);
 			exit(1);
@@ -96,27 +98,25 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	int		out;
 	int		in;
-	int		index;
+	int		command;
 
-	if (argc > 5)
+	if (argc < 5)
+		warning_format();
+	if (strncmp(argv[1], "here_doc", 8) == 0)
 	{
-		if (strncmp(argv[1], "here_doc", 8) == 0)
-		{
-			index = 3;
-			out = open(argv[argc - 1], O_CREAT | O_RDWR | O_APPEND, 0644);
-			here_doc(argv[2]);
-		}
-		else
-		{
-			index = 2;
-			in = open(argv[1], O_RDONLY);
-			out = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-			dup2(in, STDIN_FILENO);
-		}
-		while (index < argc - 2)
-			child_process(argv[index++], envp);
-		dup2(out, STDOUT_FILENO);
-		exec_cmd(argv[argc - 2], envp);
+		command = 3;
+		out = open(argv[argc - 1], O_CREAT | O_RDWR | O_APPEND, 0644);
+		here_doc(argv[2]);
 	}
-	warning_format();
+	else
+	{
+		command = 2;
+		in = open(argv[1], O_RDONLY);
+		out = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+		dup2(in, STDIN_FILENO);
+	}
+	while (command < argc - 2)
+		child_process(argv[command++], envp);
+	dup2(out, STDOUT_FILENO);
+	exec_cmd(argv[argc - 2], envp);
 }

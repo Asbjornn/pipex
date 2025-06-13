@@ -6,11 +6,11 @@
 /*   By: gcauchy <gcauchy@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:08:19 by gcauchy           #+#    #+#             */
-/*   Updated: 2025/06/10 14:08:17 by gcauchy          ###   ########.fr       */
+/*   Updated: 2025/06/13 13:09:04 by gcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../includes/get_next_line.h"
 
 char	*ft_strchr(const char *s, int c)
 {
